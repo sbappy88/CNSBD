@@ -21,7 +21,7 @@ import util.MainInitData;
 import util.ScriptsMgmt;
 import configuration.LoginlInitData;
 
-public class JtrilErp {
+public class WebTest {
 
 
     public static WebDriver driver;
