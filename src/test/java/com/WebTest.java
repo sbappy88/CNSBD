@@ -86,12 +86,12 @@ public class WebTest {
 
             // Execute all test case
             CircularSearch();
-			JobApplyNow();
-			BasicInformation();
-			Address();
-			Education();
-			JobExperience();
-			Certificate();
+	    JobApplyNow();
+	    BasicInformation();
+	    Address();
+	    Education();
+	    JobExperience();
+	    Certificate();
             Complete();
 
 
