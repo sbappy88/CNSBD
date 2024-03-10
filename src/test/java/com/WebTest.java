@@ -5,15 +5,24 @@ import org.junit.Before;
 import org.junit.After;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.is;
-
-import org.openqa.selenium.*;
-import io.github.bonigarcia.wdm.WebDriverManager;
+import static org.hamcrest.core.IsNot.not;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import java.util.*;
-import java.util.NoSuchElementException;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.Keys;
+import java.util.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import util.InitData;
 import util.Logger;
@@ -33,23 +42,25 @@ public class WebTest {
     private ScriptsMgmt scriptMgmt;
     private Logger logger;
 
-    public static String[] requisitionDOCNO =null;
+    //public static String[] requisitionDOCNO =null;
 
     @Before
     public void setUp() {
-//		System.setProperty("webdriver.gecko.driver","E:/ERAINFOTECH/Software/geckodriver-v0.31.0-win64/geckodriver.exe");
-//	    driver = new FirefoxDriver();
-//	    js = (JavascriptExecutor) driver;
-//	    vars = new HashMap<String, Object>();
-//
-       // System.setProperty("webdriver.chrome.driver","D:\\DDrive\\chromedriver\\chromedriver.exe");
-        WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
-//        WebDriverManager.firefoxdriver().setup();
-//        driver = new FirefoxDriver();
+		System.setProperty("webdriver.gecko.driver","C:\\geckodriver.exe");
+        WebDriverManager.firefoxdriver().setup();
+	    driver = new FirefoxDriver();
+	    js = (JavascriptExecutor) driver;
+	    vars = new HashMap<String, Object>();
+
+        //Please uncomment if wants to test in Chrome browser
+        // System.setProperty("webdriver.chrome.driver","C:\\chromedriver.exe");
+        //WebDriverManager.chromedriver().setup();
+        //driver = new ChromeDriver();
+
         driver.manage().window().maximize();
-//		String url= "https://seleniumpractise.blogspot.com/2016/08/how-to-automate-radio-button-in.html";
-//		driver.get(url);
+        //Test case id: TC_01 verify Open the web aplication
+		String url= "http://123.200.20.20:5302/";
+		driver.get(url);
 
     }
 
@@ -74,21 +85,14 @@ public class WebTest {
             scriptMgmt.logHeader(InitData.scriptName);
 
             // Execute all test case
-//            loginToJTRIL("Admin");
-
-            loginToJTRIL("Production executive");
-            navigationToInventoryManagement();
-            createMaterialIssueRequisition();
-
-            loginToJTRIL("Factory Head");
-            navigationToInventoryManagementApproved();
-            createMaterialIssueRequisitionApproved();
-
-//            loginToJTRIL("Store manager");
-//            loginToJTRIL("Factory QC Manager");
-
-
-//            logOut();
+            CircularSearch();
+			JobApplyNow();
+			BasicInformation();
+			Address();
+			Education();
+			JobExperience();
+			Certificate();
+            Complete();
 
 
         }catch (Exception e)
@@ -99,451 +103,371 @@ public class WebTest {
     }//login
 
 
-    /**
-     * Function Name: loginToJTRIL
-     * Description: Login to JTRIL with legal value
-     *
-     */
-    public void loginToJTRIL (String login) throws Exception{
-        String app_server [] = LoginlInitData.jtrilapp_server.split(",");
-//        String loginInput [] = LoginlInitData.production_executive_login.split(",");
-        String loginInput [] = null;
-        switch (login) {
-            case "Production executive":
-                loginInput  = LoginlInitData.production_executive_login.split(",");
-                break;
-            case "Factory Head":
-                loginInput  = LoginlInitData.factory_head_login.split(",");
-                break;
-            case "Store manager":
-                loginInput  = LoginlInitData.store_manager_login.split(",");
-                break;
-            case "Factory QC Manager":
-                loginInput  = LoginlInitData.factory_QC_manager_login.split(",");
-                break;
-            case "Admin":
-                loginInput  = LoginlInitData.admin_login.split(",");
-                break;
-            default:
-        }//End of switch
+ /**
+      * Function Name: CircularSearch
+      * Description: this function will search for specific circular
+      * Test Case reference number: TC_02
+      * Parameters: None
+      *
+  */
+  public void CircularSearch() throws Exception{
+    driver.findElement(By.cssSelector("#circularMst_filter .form-control")).click();
+    driver.findElement(By.cssSelector("#circularMst_filter .form-control")).sendKeys("14/2023");
+    driver.findElement(By.cssSelector("#circularMst_filter .form-control")).sendKeys(Keys.ENTER);
+    Assert.assertTrue(driver.getCurrentUrl().contains("14/2023"));
 
-        driver.get(app_server[0]);
-        driver.findElement(By.id("P9999_USERNAME")).click();
-        driver.findElement(By.id("P9999_USERNAME")).sendKeys(loginInput[0]);
-        driver.findElement(By.id("P9999_PASSWORD")).sendKeys(loginInput[1]);
-        driver.findElement(By.id("LOGIN")).click();
-        Thread.sleep(2000);
-       //ogOut(loginInput[0],false);
-        writeLog("JTRIL Login Test Case ", true,false);
-
-    }//Login
+  }//End of Circular Search
 
 
-    /**
-     * Function Name: loginToJTRIL
-     * Description: Navigation to Inventory Management
-     *
-     */
-    public void navigationToInventoryManagement() throws Exception{
+  /**
+       * Function Name: CircularSearch
+       * Description: this function will click on a specific circular and then apply for job without login
+       * Test Case reference number: TC_03, TC_06, TC_07 and TC_08
+       * Parameters: None
+       *
+  */
+  public void JobApplyNow() throws Exception{
+	vars.put("window_handles", driver.getWindowHandles());
+	driver.findElement(By.linkText("14/2023")).click();
 
-        Thread.sleep(3000);
-        driver.findElement(By.id("t_Button_navControl")).click();
-        driver.findElement(By.cssSelector("#t_TreeNav_1 > .a-TreeView-toggle")).click();
-        driver.findElement(By.cssSelector("#t_TreeNav_4 > .a-TreeView-toggle")).click();
-        driver.findElement(By.cssSelector("#t_TreeNav_5 > .a-TreeView-toggle")).click();
-        {
-            WebElement element = driver.findElement(By.cssSelector("#t_TreeNav_6 .a-TreeView-label"));
-            Actions builder = new Actions(driver);
-            builder.moveToElement(element).perform();
-        }
-        {
-            WebElement element = driver.findElement(By.tagName("body"));
-            Actions builder = new Actions(driver);
-            builder.moveToElement(element, 0, 0).perform();
-        }
-        {
-            WebElement element = driver.findElement(By.linkText("Material Issue Requisition (MI-2)"));
-            Actions builder = new Actions(driver);
-            builder.moveToElement(element).perform();
-        }
-        driver.findElement(By.linkText("Material Issue Requisition (MI-2)")).click();
-        {
-            WebElement element = driver.findElement(By.tagName("body"));
-            Actions builder = new Actions(driver);
-            builder.moveToElement(element, 0, 0).perform();
-        }
+	//vars.put("win136", waitForWindow(2000));
+    //driver.switchTo().window(vars.get("win136").toString());
+    //Switch between browser tabs using Selenium WebDriver
+    driver.getWindowHandles().forEach(tab->driver.switchTo().window(tab));
+    assertTrue(driver.findElement(By.id("circularDtl")).isDisplayed());
 
-        Thread.sleep(3000);
-        writeLog("JTRIL Navigation to Material Issue Requisition Test Case ", true, false);
-    }
+   //Click on the Action icon
+    driver.findElement(By.cssSelector(".bx-show")).click();
+    //Click on the Apply Now button
+    driver.findElement(By.cssSelector("strong")).click();
+    //Click on the Continue without Login button
+    driver.findElement(By.linkText("Continue without Login")).click();
 
-    /**
-     * Function Name: log out to system
-     * Description: Navigation to Inventory Management
-     *
-     */
-    public void createMaterialIssueRequisition() throws Exception{
-
-        //Thread.sleep(3000);
-        String loginInput [] = LoginlInitData.production_executive_login.split(",");
-
-        driver.findElement(By.cssSelector("#cicon > .tooltiptext")).click();
-        {
-            WebElement element = driver.findElement(By.cssSelector("#cicon > .tooltiptext"));
-            Actions builder = new Actions(driver);
-            builder.moveToElement(element).perform();
-            Thread.sleep(2000);
-        }
-        {
-            WebElement element = driver.findElement(By.tagName("body"));
-            Actions builder = new Actions(driver);
-            builder.moveToElement(element, 0, 0).perform();
-            Thread.sleep(2000);
-        }
-        driver.switchTo().frame(0);
-        driver.findElement(By.id("P413_REQDDATE|input")).sendKeys("10-Mar-2023");
-        Thread.sleep(2000);
-        driver.findElement(By.id("P413_REQDDATE|input")).sendKeys(Keys.ENTER);
-        Thread.sleep(2000);
-
-        driver.findElement(By.cssSelector("#P413_WARECODE_lov_btn > .a-Icon")).click();
-        driver.switchTo().defaultContent();
-        driver.findElement(By.cssSelector(".a-PopupLOV-search")).clear();
-        driver.findElement(By.cssSelector(".a-PopupLOV-search")).sendKeys("PR_SH1 - Production Shed 01");
-        Thread.sleep(2000);
-        driver.findElement(By.cssSelector(".a-PopupLOV-search")).sendKeys(Keys.ENTER);
-        Thread.sleep(2000);
-
-        driver.switchTo().frame(0);
-        driver.findElement(By.cssSelector("#P413_SRCWARECODE_lov_btn > .a-Icon")).click();
-        driver.switchTo().defaultContent();
-        Thread.sleep(2000);
-        driver.findElement(By.cssSelector("#PopupLov_413_P413_SRCWARECODE_dlg .a-PopupLOV-search")).sendKeys("FG0001 - Central Factory Warehouse (Fg)");
-        Thread.sleep(2000);
-        driver.findElement(By.cssSelector("#PopupLov_413_P413_SRCWARECODE_dlg .a-PopupLOV-search")).sendKeys(Keys.ENTER);
-        Thread.sleep(2000);
-
-        driver.switchTo().frame(0);
-        driver.findElement(By.cssSelector("#NEXT > .t-Button-label")).click();
-        System.out.println("Document Information Entered Successfully!!");
-        Thread.sleep(4000);
-
-        // **************************//3rd screen//*********************************
-        //Enter product information in table row
-        Actions act = new Actions(driver);
-        WebElement ele = driver.findElement(By.id("prod_info_ig_grid_vc_cur") );
-        act.moveToElement(ele);
-        Thread.sleep(2000);
-        act.doubleClick(ele).perform(); //table row double click for product code enable
-        Thread.sleep(2000);
-
-        driver.findElement(By.cssSelector("#C524831731703802929_lov_btn > .a-Icon")).click();
-        Thread.sleep(3000);
-
-        driver.switchTo().defaultContent();
-        driver.findElement(By.xpath("/html/body/div[8]/div[2]/div[1]/input")).sendKeys("RM-PRD-0001 - Rubber");
-        Thread.sleep(3000);
-        driver.findElement(By.xpath("/html/body/div[8]/div[2]/div[1]/input")).sendKeys(Keys.ENTER);
-        Thread.sleep(3000);
-        driver.switchTo().frame(0);
-        {
-            WebElement element = driver.findElement(By.id("prod_info_ig_grid_vc_cur"));
-            Actions builder = new Actions(driver);
-            builder.moveToElement(element).clickAndHold().perform();
-        }
-        {
-            WebElement element = driver.findElement(By.id("C524832991221802942"));
-            Actions builder = new Actions(driver);
-            builder.moveToElement(element).release().perform();
-        }
-        driver.findElement(By.id("prod_info_ig_grid_vc_cur")).click();
-        Thread.sleep(3000);
-        driver.findElement(By.id("C524832991221802942")).sendKeys("1");
-        {
-            WebElement element = driver.findElement(By.id("prod_info_ig_grid_vc_cur"));
-            Actions builder = new Actions(driver);
-            builder.moveToElement(element).clickAndHold().perform();
-        }
-        {
-            WebElement element = driver.findElement(By.id("C476187776190156703"));
-            Actions builder = new Actions(driver);
-            builder.moveToElement(element).release().perform();
-        }
-        driver.findElement(By.id("prod_info_ig_grid_vc_cur")).click();
-        Thread.sleep(2000);
-        driver.findElement(By.id("C476187776190156703")).sendKeys("test1");
-        Thread.sleep(2000);
-
-        //Submit Yes/No product information in table row
-        Actions act2 = new Actions(driver);
-        WebElement ele2 = driver.findElement(By.xpath("/html/body/form/div[1]/div/div[2]/div/div[2]/div[2]/div[2]/div[2]/div/div/div[3]/div[3]/div[1]/div[3]/div[4]/table/tbody/tr/td[9]") );
-        act2.moveToElement(ele2);
-        act2.click(ele2).perform();
-        driver.findElement(By.cssSelector("span.apex-item-option:nth-child(1) > label:nth-child(2)")).click();
-        Thread.sleep(2000);
-        driver.findElement(By.cssSelector(".apex-item-option--yes > .a-Button")).click(); // Yes option choose
-        Thread.sleep(2000);
-        //***End 1st row data entry
-
-        //Start 2nd row product information
-        Actions act3 = new Actions(driver);
-        WebElement ele3 = driver.findElement(By.xpath("/html/body/form/div[1]/div/div[2]/div/div[2]/div[2]/div[2]/div[2]/div/div/div[3]/div[3]/div[1]/div[3]/div[4]/table/tbody/tr/td[1]/button/span") );
-        act3.moveToElement(ele3);
-        Thread.sleep(2000);
-        act3.click(ele3).perform();
-        Thread.sleep(2000);
-        driver.findElement(By.id("prod_info_ig_row_actions_menu_2i")).click();
-        Thread.sleep(2000);
-        driver.findElement(By.cssSelector("#C524831731703802929_lov_btn > .a-Icon")).click();
-        Thread.sleep(2000);
-        driver.switchTo().defaultContent();
-        driver.findElement(By.xpath("/html/body/div[8]/div[2]/div[1]/input")).clear();
-        driver.findElement(By.xpath("/html/body/div[8]/div[2]/div[1]/input")).sendKeys("RM-PRD-0002 - CARBON BLACK");
-        Thread.sleep(2000);
-        driver.findElement(By.xpath("/html/body/div[8]/div[2]/div[1]/input")).sendKeys(Keys.ENTER);
-        Thread.sleep(2000);
-
-        driver.switchTo().frame(0);
-        {
-            WebElement element = driver.findElement(By.id("prod_info_ig_grid_vc_cur"));
-            Actions builder = new Actions(driver);
-            builder.moveToElement(element).clickAndHold().perform();
-        }
-        {
-            WebElement element = driver.findElement(By.id("C524832991221802942"));
-            Actions builder = new Actions(driver);
-            builder.moveToElement(element).release().perform();
-        }
-        driver.findElement(By.id("prod_info_ig_grid_vc_cur")).click();
-        driver.findElement(By.id("C524832991221802942")).sendKeys("1");
-
-        {
-            WebElement element = driver.findElement(By.id("prod_info_ig_grid_vc_cur"));
-            Actions builder = new Actions(driver);
-            builder.moveToElement(element).clickAndHold().perform();
-        }
-        {
-            WebElement element = driver.findElement(By.id("C476187776190156703"));
-            Actions builder = new Actions(driver);
-            builder.moveToElement(element).release().perform();
-        }
-        driver.findElement(By.id("prod_info_ig_grid_vc_cur")).click();
-        driver.findElement(By.id("C476187776190156703")).sendKeys("remarks");
-
-        //Submit Yes/No product information in table row
-        Actions act4 = new Actions(driver);
-        WebElement ele4 = driver.findElement(By.xpath("/html/body/form/div[1]/div/div[2]/div/div[2]/div[2]/div[2]/div[2]/div/div/div[3]/div[3]/div[1]/div[3]/div[4]/table/tbody/tr[2]/td[9]") );
-        act3.moveToElement(ele4);
-        Thread.sleep(2000);
-        act4.click(ele4).perform();
-        Thread.sleep(2000);
-        driver.findElement(By.cssSelector("span.apex-item-option:nth-child(1) > label:nth-child(2)")).click();
-        Thread.sleep(2000);
-        driver.findElement(By.cssSelector(".apex-item-option--yes > .a-Button")).click(); // Yes option choose
-        Thread.sleep(2000);
-        driver.findElement(By.id("R525102492243922821_heading")).click();
-        Thread.sleep(2000);
-        driver.findElement(By.cssSelector("#NEXT > .t-Button-label")).click();
-        Thread.sleep(3000);
-        driver.findElement(By.cssSelector("#SUBMIT > .t-Button-label")).click();
-        Thread.sleep(2000);
-
-        driver.switchTo().defaultContent();
-        driver.findElement(By.cssSelector(".js-confirmBtn")).click();
-        Thread.sleep(2000);
-
-        driver.switchTo().frame(0);
-        String text2 =driver.findElement(By.cssSelector("#t_Alert_Success .t-Alert-title")).getText();
-        //System.out.println("Alert text: "+text2);
-        requisitionDOCNO = text2.split("No. :");
-        requisitionDOCNO[1] = requisitionDOCNO[1].replaceAll("\\s", "");
-        //System.out.println("Alert text1: " + elements[0]);
-        System.out.println("Alert text2: " + requisitionDOCNO[1]);
-        driver.findElement(By.cssSelector(".t-Button--noUI")).click();
-        Thread.sleep(2000);
-
-        //driver.switchTo().defaultContent();
-        driver.findElement(By.id("ok-btn")).click();
-        Thread.sleep(3000);
-        logOut(loginInput[0],false);
-        //Thread.sleep(5000);
-        //End 2nd row product information
-
-        writeLog("Material Issue Requisition (MI-2) generate successfully and go for Approval ", false, false);
-
-    }//End of createMaterialIssueRequisition
-
-    /**
-     * Function Name: navigationToInventoryManagementApproved
-     * Description: Navigation to Inventory Management Approval screen by Factory head
-     *
-     */
-    public void navigationToInventoryManagementApproved() throws Exception{
-        Thread.sleep(2000);
-        //This option will commenting when stast from scratch
-        //driver.findElement(By.id("t_Button_navControl")).click();
-        driver.findElement(By.cssSelector("#t_TreeNav_2 > .a-TreeView-toggle")).click();
-        {
-            WebElement element = driver.findElement(By.linkText("Transaction Approval"));
-            Actions builder = new Actions(driver);
-            builder.moveToElement(element).perform();
-        }
-        {
-            WebElement element = driver.findElement(By.tagName("body"));
-            Actions builder = new Actions(driver);
-            builder.moveToElement(element, 0, 0).perform();
-        }
-        {
-            WebElement element = driver.findElement(By.linkText("Transaction Approval"));
-            Actions builder = new Actions(driver);
-            builder.moveToElement(element).perform();
-        }
-        driver.findElement(By.linkText("Transaction Approval")).click();
-        {
-            WebElement element = driver.findElement(By.tagName("body"));
-            Actions builder = new Actions(driver);
-            builder.moveToElement(element, 0, 0).perform();
-        }
-        Thread.sleep(3000);
-    }//End of navigationToInventoryManagementApproved
+  }//End of JobApplyNow
 
 
-    /**
-     * Function Name: createMaterialIssueRequisitionApproved
-     * Description: this function will find and approved the selected requisition Doc number
-     *
-     */
-    public void createMaterialIssueRequisitionApproved() throws Exception{
+  /**
+       * Function Name: BasicInformation
+       * Description: This function will enter the applicant basic information like NID, DOB, Mobile no etc.
+       * Test Case reference number: TC_09, TC_10
+       * Parameters: None
+       *
+  */
+  public void BasicInformation() throws Exception{
+    // ENTER National ID
+    driver.findElement(By.id("national_id")).click();
+	driver.findElement(By.id("national_id")).sendKeys("8231771135");
+    driver.findElement(By.id("national_id")).sendKeys(Keys.ENTER);
 
-        driver.switchTo().defaultContent();
-        driver.findElement(By.cssSelector("#micon > .tooltiptext")).click();
-        Thread.sleep(2000);
-        driver.switchTo().frame(0);
-        driver.findElement(By.id("R801114255824919449_search_field")).click();
-        Thread.sleep(2000);
-        driver.findElement(By.id("R801114255824919449_search_field")).sendKeys(requisitionDOCNO[1]);
-//        driver.findElement(By.id("R801114255824919449_search_field")).sendKeys("MI2SH10158");
-        Thread.sleep(2000);
-        driver.findElement(By.id("R801114255824919449_search_field")).sendKeys(Keys.ENTER);
-        Thread.sleep(2000);
-        driver.findElement(By.linkText(requisitionDOCNO[1]+"/MI/2")).click();
-//        driver.findElement(By.linkText("MI2SH10158/MI/2")).click();
-        Thread.sleep(3000);
+    // NID FILE UPLOADING ....
+    driver.findElement(By.id("national_id_attachment")).click();
+    driver.findElement(By.id("national_id_attachment")).sendKeys("C:\\WebTest\\image\\NID.jpg");
 
-        WebElement table_element1 = driver.findElement(By.className("a-GV-table"));
-        List<WebElement> tr_collection1=table_element1.findElements(By.xpath("/html/body/form/div/div[2]/div/div/div/div/div/div/div/div[3]/div[3]/div[1]/div[3]/div[4]/table/tbody/tr"));
-        int count = tr_collection1.size();
-        System.out.println("ROW COUNT : "+count);
+    // ENTER Date of Birth
+    driver.findElement(By.id("date_of_birth")).sendKeys("23-08-1995");
+    driver.findElement(By.id("date_of_birth")).sendKeys(Keys.ENTER);
 
-        if(count>1){
-           for (int i = 1; i <= count; i++) {
-                Actions act5 = new Actions(driver);
-                WebElement ele5 = driver.findElement(By.xpath("/html/body/form/div/div[2]/div/div/div/div/div/div/div/div[3]/div[3]/div[1]/div[3]/div[4]/table/tbody/tr[" + i + "]/td[9]"));
-                act5.moveToElement(ele5);
-                Thread.sleep(3000);
-                act5.doubleClick(ele5).perform(); //table row double click for product code enable
-                Thread.sleep(3000);
-                driver.findElement(By.id("C573490683987171611")).sendKeys("1");
-                Thread.sleep(2000);
-                driver.findElement(By.id("C573490683987171611")).sendKeys(Keys.ENTER);
-                Thread.sleep(2000);
-                if(i==count) {
-                    driver.findElement(By.id("B156341159548901202")).click();
-                    Thread.sleep(2000);
-                    driver.findElement(By.id("SAVE")).click();
-                    Thread.sleep(2000);
-                }
-            }//end for
+    // CLICK ON VERIFY NID BUTTON
+    driver.findElement(By.id("nid_verification")).click();
+    Thread.sleep(3000);
 
-        }else {
-            Actions act5 = new Actions(driver);
-            WebElement ele5 = driver.findElement(By.xpath("/html/body/form/div/div[2]/div/div/div/div/div/div/div/div[3]/div[3]/div[1]/div[3]/div[4]/table/tbody/tr/td[9]") );
-            act5.moveToElement(ele5);
-            Thread.sleep(3000);
-            act5.doubleClick(ele5).perform(); //table row double click for product code enable
-            Thread.sleep(3000);
-            driver.findElement(By.id("C573490683987171611")).sendKeys("1");
-            Thread.sleep(2000);
-            driver.findElement(By.id("C573490683987171611")).sendKeys(Keys.ENTER);
-            Thread.sleep(2000);
-            driver.findElement(By.id("B156341159548901202")).click();
-            Thread.sleep(2000);
-            driver.findElement(By.id("SAVE")).click();
-            Thread.sleep(2000);
-        }//end else
+    JavascriptExecutor js = (JavascriptExecutor)d; //Scrolling using JavascriptExecutor
+	js.executeScript("window.scrollBy(0,380)");//Scroll Down to file upload button
+    Thread.sleep(3000);
 
-        Thread.sleep(33000);
+    //ENTER Father Name
+    driver.findElement(By.id("father_name")).click();
+	driver.findElement(By.id("father_name")).sendKeys("Father Name");
+	//ENTER Mother Name
+	driver.findElement(By.id("mother_name")).click();
+    driver.findElement(By.id("mother_name")).sendKeys("Mother Name");
 
-        }//end of crerow_numateMaterialIssueRequisitionApproved
+    driver.findElement(By.id("mobile")).click();
+	driver.findElement(By.id("mobile")).sendKeys("01911111111");
 
-    /**
-     * Function Name: log out to system
-     * Description: Navigation to Inventory Management
-     *
-     */
-    public void logOut(String loginfo, boolean isMail) throws Exception{
+	//assertThat(driver.switchTo().alert().getText(), is("Your One-Time Password is 5078. Please enter the password to login."));
+	//Trim OTP info from the alert box
+	String otp = driver.switchTo().alert().getText();
+    String otp = s.substring(27,31);
+    Alert alert = driver.switchTo().alert();
+	alert.accept();
+	//Enter OTP value for match
+	driver.findElement(By.id("otp")).click();
+	driver.findElement(By.id("otp")).sendKeys(otp);
+	Alert alert2 = driver.switchTo().alert();
+	alert2.accept();
+	//assertThat(driver.switchTo().alert().getText(), is("OTP Match"));
 
-//        String loginInput [] = LoginlInitData.production_executive_login.split(",");
-//        String loginInput [] = loginfo.split(",");
-        Thread.sleep(5000);
-//        driver.findElement(By.linkText("LOGOUT: "+loginInput[0])).click();
-        driver.findElement(By.linkText("LOGOUT: "+loginfo)).click();
-        assertThat(driver.switchTo().alert().getText(), is("You are about to exit. Are you sure to continue..?"));
-        driver.switchTo().alert().accept();
-        Thread.sleep(3000);
-        writeLog("JTRIL Log out Test Case ", true, isMail);
+	//Enter email info
+	driver.findElement(By.id("email")).click();
+	driver.findElement(By.id("email")).sendKeys("TEST@TEST.COM");
+    driver.findElement(By.id("email")).sendKeys(Keys.ENTER);
+
+    //Select religion from the list
+    driver.findElement(By.id("religion")).click();
+	{
+	      WebElement dropdown = driver.findElement(By.id("religion"));
+	      dropdown.findElement(By.xpath("//option[. = 'ISLAM']")).click();
+	}
+    driver.findElement(By.cssSelector("#religion > option:nth-child(2)")).click();
+    Thread.sleep(3000);
+
+    //Upload photo
+    driver.findElement(By.id("photo")).click();
+	driver.findElement(By.id("photo")).sendKeys("C:\\WebTest\\image\\Photo.jpg");
+	Thread.sleep(3000);
+	//Upload signature
+	driver.findElement(By.id("signature")).click();
+    driver.findElement(By.id("signature")).sendKeys("C:\\WebTest\\image\\Signature.png");
+    Thread.sleep(3000);
+
+    // CLICK ON NEXT BUTTON
+    driver.findElement(By.cssSelector(".justify-content-end:nth-child(1) > .btn")).click();
+    Thread.sleep(3000);
+
+  } //End BasicInformation
 
 
 
-    }
+  /**
+      * Function Name: Address
+      * Description: This function will enter the applicant Permanent Address and Present Address
+      * Test Case reference number: TC_11
+      * Parameters: None
+      *
+  */
+  public void Address() throws Exception{
+    //ENTER applicant division info
+    driver.findElement(By.id("permanent_division")).click();
+	{
+	      WebElement dropdown = driver.findElement(By.id("permanent_division"));
+	      dropdown.findElement(By.xpath("//option[. = 'DHAKA']")).click();
+	}
+	driver.findElement(By.cssSelector("#permanent_division > option:nth-child(2)")).click();
+
+	//ENTER applicant distric info
+	driver.findElement(By.id("permanent_district")).click();
+	{
+	      WebElement dropdown = driver.findElement(By.id("permanent_district"));
+	      dropdown.findElement(By.xpath("//option[. = 'DHAKA']")).click();
+	}
+
+	//select district from the list
+	driver.findElement(By.cssSelector("#permanent_district > option:nth-child(2)")).click();
+	{
+	      WebElement element = driver.findElement(By.linkText("3"));
+	      Actions builder = new Actions(driver);
+	      builder.moveToElement(element).perform();
+	}
+
+	//ENTER applicant Thana/Upazila info
+	driver.findElement(By.id("select2-permanent_thana-container")).click();
+	driver.findElement(By.cssSelector(".select2-search__field")).sendKeys("ramna");
+    driver.findElement(By.cssSelector(".select2-search__field")).sendKeys(Keys.ENTER);
+
+	//ENTER applicant post code info
+	driver.findElement(By.id("permanent_post_office_name")).click();
+    driver.findElement(By.id("permanent_post_office_name")).sendKeys("1217");
+
+    //ENTER applicant post code info
+    driver.findElement(By.id("permanent_post_code")).click();
+	driver.findElement(By.id("permanent_post_code")).sendKeys("1217");
+    driver.findElement(By.id("permanent_post_code")).sendKeys(Keys.ENTER);
+
+    //ENTER applicant detail address info
+    driver.findElement(By.id("permanent_address")).click();
+	driver.findElement(By.id("permanent_address")).sendKeys("H#4, R#11, SECTION#6, MIRPUR, DHAKA-1216");
+    driver.findElement(By.id("permanent_address")).sendKeys(Keys.ENTER);
+
+    // CLICK ON CHECKBOX Same As Permanent Address
+    driver.findElement(By.cssSelector(".custom-checkbox:nth-child(1) > .custom-control-label")).click();
+
+    // CLICK ON NEXT BUTTON
+    driver.findElement(By.cssSelector("#enable_after_district_verification > .btn")).click();
+    Thread.sleep(3000);
+
+  }//End of Address
 
 
 
+  /**
+      * Function Name: Education
+      * Description: This function will enter the applicant Permanent Address and Present Address
+      * Test Case reference number: TC_12
+      * Parameters: None
+      *
+  */
+  public void Education() throws Exception{
 
-    /**
-     * Function Name: writeLog
-     * Description: Write TestCases log into text file
-     *
-     * @since  2012/10/02
-     * @author Abu Salahuddin
-     */
-    private void writeLog(String caption, boolean isPassed, boolean isMail)
+      //Select the Education level
+      driver.findElement(By.id("education_0_exam")).click();
+      {
+        WebElement dropdown = driver.findElement(By.id("education_0_exam"));
+        dropdown.findElement(By.xpath("//option[. = 'HSC']")).click();
+      }
+      driver.findElement(By.cssSelector("#education_0_exam > option:nth-child(2)")).click();
+
+      //Select the subject
+      driver.findElement(By.id("select2-education_0_subject-container")).click();
+	  driver.findElement(By.cssSelector(".select2-search__field")).sendKeys("science");
+      driver.findElement(By.cssSelector(".select2-search__field")).sendKeys(Keys.ENTER);
+
+      //Select the Institution/Board
+      driver.findElement(By.id("select2-education_0_exam_body-container")).click();
+	  driver.findElement(By.cssSelector(".select2-search__field")).sendKeys("comilla");
+      driver.findElement(By.cssSelector(".select2-search__field")).sendKeys(Keys.ENTER);
+
+      //Select the Passing Year
+      driver.findElement(By.id("education_0_passing_year")).click();
+      driver.findElement(By.id("education_0_passing_year")).clear();
+	  driver.findElement(By.id("education_0_passing_year")).sendKeys("1992");
+      driver.findElement(By.id("education_0_passing_year")).sendKeys(Keys.ENTER);
+
+      //Select the Result type
+      driver.findElement(By.id("select2-education_0_result_type-container")).click();
+	  driver.findElement(By.cssSelector(".select2-search__field")).sendKeys("gpa");
+      driver.findElement(By.cssSelector(".select2-search__field")).sendKeys(Keys.ENTER);
+
+      //Select the Passing result number
+      driver.findElement(By.id("education_0_result")).click();
+	  driver.findElement(By.id("education_0_result")).sendKeys("4.5");
+      driver.findElement(By.id("education_0_result")).sendKeys(Keys.ENTER);
+
+      //Enter the 2nd education level from here
+      driver.findElement(By.id("education_1_exam")).click();
+	  {
+	        WebElement dropdown = driver.findElement(By.id("education_1_exam"));
+	        dropdown.findElement(By.xpath("//option[. = 'SSC']")).click();
+	  }
+     driver.findElement(By.cssSelector("#education_1_exam > option:nth-child(2)")).click();
+
+	 //Select the subject
+	 driver.findElement(By.id("select2-education_1_subject-container")).click();
+	 driver.findElement(By.cssSelector(".select2-search__field")).sendKeys("science");
+     driver.findElement(By.cssSelector(".select2-search__field")).sendKeys(Keys.ENTER);
+
+    //Select the Institution/Board
+    driver.findElement(By.cssSelector(".select2-container--open b")).click();
+    driver.findElement(By.cssSelector(".select2-search__field")).sendKeys("dhaka");
+    driver.findElement(By.cssSelector(".select2-search__field")).sendKeys(Keys.ENTER);
+
+    //Select the Passing Year
+    driver.findElement(By.id("education_1_passing_year")).click();
+    driver.findElement(By.id("education_1_passing_year")).clear();
+    driver.findElement(By.id("education_1_passing_year")).sendKeys("1990");
+    driver.findElement(By.id("education_1_passing_year")).sendKeys(Keys.ENTER);
+
+    //Select the Passing result number
+    driver.findElement(By.id("select2-education_1_result_type-container")).click();
+	driver.findElement(By.cssSelector(".select2-search__field")).sendKeys("gpa");
+    driver.findElement(By.cssSelector(".select2-search__field")).sendKeys(Keys.ENTER);
+    driver.findElement(By.id("education_1_result")).click();
+	driver.findElement(By.id("education_1_result")).sendKeys("5");
+    driver.findElement(By.id("education_1_result")).sendKeys(Keys.ENTER);
+
+    // CLICK ON NEXT BUTTON
+    driver.findElement(By.cssSelector("#nextButtonContainer > .btn")).click();
+    Thread.sleep(3000);
+
+
+  }//End Education
+
+
+
+  /**
+      * Function Name: JobExperience
+      * Description: This function will enter the applicant Job Experience info
+      * Test Case reference number: TC_13
+      * Parameters: None
+      *
+  */
+  public void JobExperience() throws Exception{
+
+	//ENTER the Organization name
+	driver.findElement(By.id("jobexperience_0_organization")).click();
+	driver.findElement(By.id("jobexperience_0_organization")).sendKeys("ERA INFOTECH LTD");
+	driver.findElement(By.cssSelector(".select2-selection__placeholder")).click();
+
+	//ENTER the Designation
+	driver.findElement(By.cssSelector(".select2-search__field")).sendKeys("engineer");
+    driver.findElement(By.cssSelector(".select2-search__field")).sendKeys(Keys.ENTER);
+
+    //ENTER the Job Start and End date
+    driver.findElement(By.id("jobexperience_0_start_date")).click();
+    driver.findElement(By.id("jobexperience_0_start_date")).sendKeys("2018-05-03");
+    driver.findElement(By.id("jobexperience_0_start_date")).sendKeys(Keys.ENTER);
+    driver.findElement(By.id("jobexperience_0_end_date")).click();
+    driver.findElement(By.id("jobexperience_0_end_date")).sendKeys("2023-12-31");
+    driver.findElement(By.id("jobexperience_0_end_date")).sendKeys(Keys.ENTER);
+
+    //ENTER JOB ADDRESS
+    driver.findElement(By.id("jobexperience_0_address")).click();
+	driver.findElement(By.id("jobexperience_0_address")).sendKeys("24 PALTAN DHAKA");
+    driver.findElement(By.id("jobexperience_0_address")).sendKeys(Keys.ENTER);
+
+    // CLICK ON NEXT BUTTON
+    driver.findElement(By.cssSelector(".jobExpNext")).click();
+
+  }//End of Job Experience
+
+
+
+  /**
+      * Function Name: Certificate
+      * Description: This function will enter the applicant Certificate info
+      * Test Case reference number: TC_14
+      * Parameters: None
+      *
+  */
+  public void Certificate() throws Exception{
+
+    //Select course from list
+    driver.findElement(By.id("select2-training_0_course-container")).click();
+    driver.findElement(By.cssSelector(".select2-search__field")).sendKeys("DIPLOMA");
+    driver.findElement(By.cssSelector(".select2-search__field")).sendKeys(Keys.ENTER);
+
+    //Enter course duration
+    driver.findElement(By.id("training_0_duration")).click();
+    driver.findElement(By.id("training_0_duration")).sendKeys("2");
+    driver.findElement(By.id("training_0_duration")).sendKeys(Keys.ENTER);
+
+    //Select course duration (year/month) from list
+    driver.findElement(By.id("training_0_type")).click();
     {
-        if (isPassed) // if the operation is performed successfully.
-            scriptMgmt.logPass(caption);
-        else // if the operation is not performed successfully.
-            scriptMgmt.logFail(caption);
-        // scriptMgmt.logFail_stop_sendmail(caption);
-
-        scriptMgmt.logFooter(caption, isMail);
-    }//writeLog
-
-    public static void Scroll_Down_Loop(int x, String css) throws InterruptedException {
-        Actions action = new Actions(driver);
-        FindElementByCssSelector_Click(css);
-        for(int i = 0; i < x; i++){
-            action.sendKeys(Keys.ARROW_DOWN).build().perform();
-        }
-    }
-    public static void FindElementByCssSelector_Click(String cssSelector){
-        driver.findElement(By.cssSelector(cssSelector)).click();
-    }
-    public static void doubleClick(WebElement element) {
-        try {
-            Actions action = new Actions(driver).doubleClick(element);
-            action.build().perform();
-
-            System.out.println("Double clicked the element");
-        } catch (StaleElementReferenceException e) {
-            System.out.println("Element is not attached to the page document "
-                    + e.getStackTrace());
-        } catch (NoSuchElementException e) {
-            System.out.println("Element " + element + " was not found in DOM "
-                    + e.getStackTrace());
-        } catch (Exception e) {
-            System.out.println("Element " + element + " was not clickable "
-                    + e.getStackTrace());
-        }
+      WebElement dropdown = driver.findElement(By.id("training_0_type"));
+      dropdown.findElement(By.xpath("//option[. = 'YEAR']")).click();
     }
 
-}
+   // CLICK ON NEXT BUTTON
+   driver.findElement(By.cssSelector(".trainingExpNext")).click();
+
+
+  }//END OF Certificate
+
+
+  /**
+      * Function Name: Complete
+      * Description: This function will complete the applicant job application
+      * Test Case reference number: TC_15
+      * Parameters: None
+      *
+  */
+  public void Complete() throws Exception{
+	  // SELECT Declaration CHECKBOX
+	  driver.findElement(By.cssSelector(".custom-checkbox:nth-child(2) > .custom-control-label")).click();
+
+	  // CLICK ON COMPLETE BUTTON
+	  driver.findElement(By.name("completeBtn")).click();
+
+	  // CLICK ON CONFIRM BUTTON
+	  driver.findElement(By.cssSelector(".swal2-confirm")).click();
+
+	  //THIS IS PATH : /html/body/div[4]/div[2]/div/div[2]/div[1]/div/strong
+	  assertThat(driver.findElement(By.cssSelector(".alert-static > strong")).getText(), is("Your login info is:\\\\nMobile:01911111111 Password: ip1rm3CD. Please save it and use in future.\\\\nAn E-mail and SMS should sent to your given e-mail and mobile number with same login credentials! Please check your e-mail spam box too!"));
+
+
+  }//End of Complete
+
+
+
+}//END
