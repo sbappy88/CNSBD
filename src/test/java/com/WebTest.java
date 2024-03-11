@@ -71,7 +71,7 @@ public class WebTest {
     }
 
     @Test
-    public void login () throws Exception{
+    public void main () throws Exception{
 
         try {
 
