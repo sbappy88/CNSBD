@@ -81,7 +81,7 @@ public class WebTest {
             loginData = LoginlInitData.getInstance();
             scriptMgmt = ScriptsMgmt.getInstance();
             logger = Logger.getInstance();
-            InitData.setScriptName("com.JtrilErp");
+            InitData.setScriptName("com.WebTest");
             scriptMgmt.logHeader(InitData.scriptName);
 
             // Execute all test case Sequentially
@@ -127,11 +127,9 @@ public class WebTest {
        *
   */
   public void JobApplyNow() throws Exception{
-	vars.put("window_handles", driver.getWindowHandles());
-	driver.findElement(By.linkText("14/2023")).click();
-
-	//vars.put("win136", waitForWindow(2000));
-    //driver.switchTo().window(vars.get("win136").toString());
+    vars.put("window_handles", driver.getWindowHandles());
+    driver.findElement(By.linkText("14/2023")).click();
+	  
     //Switch between browser tabs using Selenium WebDriver
     driver.getWindowHandles().forEach(tab->driver.switchTo().window(tab));
     assertTrue(driver.findElement(By.id("circularDtl")).isDisplayed());
