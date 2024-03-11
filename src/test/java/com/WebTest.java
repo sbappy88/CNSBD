@@ -46,11 +46,11 @@ public class WebTest {
 
     @Before
     public void setUp() {
-		System.setProperty("webdriver.gecko.driver","C:\\geckodriver.exe");
+	System.setProperty("webdriver.gecko.driver","C:\\geckodriver.exe");
         WebDriverManager.firefoxdriver().setup();
-	    driver = new FirefoxDriver();
-	    js = (JavascriptExecutor) driver;
-	    vars = new HashMap<String, Object>();
+	driver = new FirefoxDriver();
+	js = (JavascriptExecutor) driver;
+	vars = new HashMap<String, Object>();
 
         //Please uncomment if wants to test in Chrome browser
         // System.setProperty("webdriver.chrome.driver","C:\\chromedriver.exe");
@@ -58,9 +58,10 @@ public class WebTest {
         //driver = new ChromeDriver();
 
         driver.manage().window().maximize();
+	    
         //Test case id: TC_01 verify Open the web aplication
-		String url= "http://123.200.20.20:5302/";
-		driver.get(url);
+	String url= "http://123.200.20.20:5302/";
+	driver.get(url);
 
     }
 
@@ -93,7 +94,6 @@ public class WebTest {
 	    JobExperience(); // Test Case ID: TC_13
 	    Certificate(); // Test Case ID: TC_14
             Complete(); // Test Case ID: TC_15
-
 
         }catch (Exception e)
         {
@@ -154,7 +154,7 @@ public class WebTest {
   public void BasicInformation() throws Exception{
     // ENTER National ID
     driver.findElement(By.id("national_id")).click();
-	driver.findElement(By.id("national_id")).sendKeys("8231771135");
+    driver.findElement(By.id("national_id")).sendKeys("8231771135");
     driver.findElement(By.id("national_id")).sendKeys(Keys.ENTER);
 
     // NID FILE UPLOADING ....
@@ -170,22 +170,22 @@ public class WebTest {
     Thread.sleep(3000);
 
     JavascriptExecutor js = (JavascriptExecutor)d; //Scrolling using JavascriptExecutor
-	js.executeScript("window.scrollBy(0,380)");//Scroll Down to file upload button
+    js.executeScript("window.scrollBy(0,380)");//Scroll Down to file upload button
     Thread.sleep(3000);
 
     //ENTER Father Name
     driver.findElement(By.id("father_name")).click();
-	driver.findElement(By.id("father_name")).sendKeys("Father Name");
-	//ENTER Mother Name
-	driver.findElement(By.id("mother_name")).click();
+    driver.findElement(By.id("father_name")).sendKeys("Father Name");
+    //ENTER Mother Name
+    driver.findElement(By.id("mother_name")).click();
     driver.findElement(By.id("mother_name")).sendKeys("Mother Name");
 
     driver.findElement(By.id("mobile")).click();
-	driver.findElement(By.id("mobile")).sendKeys("01911111111");
+    driver.findElement(By.id("mobile")).sendKeys("01911111111");
 
-	//assertThat(driver.switchTo().alert().getText(), is("Your One-Time Password is 5078. Please enter the password to login."));
-	//Trim OTP info from the alert box
-	String otp = driver.switchTo().alert().getText();
+    //assertThat(driver.switchTo().alert().getText(), is("Your One-Time Password is 5078. Please enter the password to login."));
+    //Trim OTP info from the alert box
+    String otp = driver.switchTo().alert().getText();
     String otp = s.substring(27,31);
     Alert alert = driver.switchTo().alert();
 	alert.accept();
