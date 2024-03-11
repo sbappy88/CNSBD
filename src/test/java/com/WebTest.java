@@ -70,6 +70,12 @@ public class WebTest {
         driver.quit();
     }
 
+    /**
+	* Function Name: main
+	* Description: this is main function which will execute all test cases one by one
+	* Parameters: None
+	*
+   */
     @Test
     public void main () throws Exception{
 
