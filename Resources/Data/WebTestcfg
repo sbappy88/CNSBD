@@ -1,0 +1,8 @@
+send_mail=yes
+
+//webtest Login information
+
+webtest_server=Title: http://123.200.20.20:5302/,*firefox
+webtestlogin_password=01911111111,12345678
+
+
