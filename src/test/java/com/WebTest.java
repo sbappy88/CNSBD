@@ -84,15 +84,15 @@ public class WebTest {
             InitData.setScriptName("com.JtrilErp");
             scriptMgmt.logHeader(InitData.scriptName);
 
-            // Execute all test case
-            CircularSearch();
-	    JobApplyNow();
-	    BasicInformation();
-	    Address();
-	    Education();
-	    JobExperience();
-	    Certificate();
-            Complete();
+            // Execute all test case Sequentially
+            CircularSearch(); // Test Case ID: TC_02
+	    JobApplyNow(); // Test Case ID: TC_03, TC_06, TC_07 and TC_08
+	    BasicInformation(); // Test Case ID: TC_09, TC_10
+	    Address(); // Test Case ID: TC_11
+	    Education(); // Test Case ID: TC_12
+	    JobExperience(); // Test Case ID: TC_13
+	    Certificate(); // Test Case ID: TC_14
+            Complete(); // Test Case ID: TC_15
 
 
         }catch (Exception e)
