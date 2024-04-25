@@ -85,6 +85,10 @@ public class WebTest {
             JobApplyNow(); // Test Case ID: TC_03, TC_06, TC_07 and TC_08
             BasicInformation(); // Test Case ID: TC_09, TC_10
             Address(); // Test Case ID: TC_11
+            Education(); // Test Case ID: TC_12
+            JobExperience(); // Test Case ID: TC_13
+//            Certificate(); // Test Case ID: TC_14
+//            Complete(); // Test Case ID: TC_15
 
         }catch (Exception e)
         {
@@ -223,10 +227,10 @@ public class WebTest {
         //Enter OTP value for match
         driver.findElement(By.id("otp")).click();
         driver.findElement(By.id("otp")).sendKeys(otp);
-        Thread.sleep(6000);
+        Thread.sleep(4000);
         Alert alert2 = driver.switchTo().alert();
         alert2.accept();
-        Thread.sleep(6000);
+        Thread.sleep(3000);
         //assertThat(driver.switchTo().alert().getText(), is("OTP Match"));
 
         //Enter email info
@@ -268,17 +272,17 @@ public class WebTest {
             dropdown.findElement(By.xpath("//option[. = 'ISLAM']")).click();
         }
         driver.findElement(By.cssSelector("#religion > option:nth-child(2)")).click();
-        Thread.sleep(5000);
+        Thread.sleep(3000);
 
         //Upload photo
         WebElement addPhoto = driver.findElement(By.id("photo"));
         addPhoto.sendKeys("E:\\\\SelIDE\\\\WebTest\\\\image\\\\Photo.jpg");// For setting a profile picture
-        Thread.sleep(5000);
+        Thread.sleep(3000);
 
         //Upload signature
         WebElement addSign = driver.findElement(By.id("signature"));
         addSign.sendKeys("E:\\\\SelIDE\\\\WebTest\\\\image\\\\Signature.jpg");// For setting a profile picture
-        Thread.sleep(5000);
+        Thread.sleep(3000);
 
         JavascriptExecutor jscroll9 = (JavascriptExecutor)driver; // Scroll operation using Js Executor
         jscroll9.executeScript("window.scrollBy(0,400)"); // Scroll Down(+ve) upto browse option
@@ -286,7 +290,7 @@ public class WebTest {
 
         // CLICK ON NEXT BUTTON
         driver.findElement(By.cssSelector(".justify-content-end:nth-child(1) > .btn")).click();
-        Thread.sleep(6000);
+        Thread.sleep(3000);
 
     } //End BasicInformation
 
@@ -349,7 +353,8 @@ public class WebTest {
 
         //ENTER applicant detail address info
         driver.findElement(By.id("permanent_address_bng")).click();
-        driver.findElement(By.id("permanent_address_bng")).sendKeys("H#4, R#11, SECTION#6, MIRPUR, DHAKA-1216");
+        driver.findElement(By.id("permanent_address_bng")).clear();
+        driver.findElement(By.id("permanent_address_bng")).sendKeys("২০/২, রূপনগর আবাসিক এলাকা, ওয়ার্ড নং-২০(পার্ট)");
         driver.findElement(By.id("permanent_address_bng")).sendKeys(Keys.ENTER);
         Thread.sleep(3000);
 
@@ -361,10 +366,185 @@ public class WebTest {
         Thread.sleep(3000);
 
         // CLICK ON NEXT BUTTON
-        //driver.findElement(By.cssSelector("#enable_after_district_verification > .btn")).click();
-        Thread.sleep(30000);
+        driver.findElement(By.cssSelector("#enable_after_district_verification > .btn")).click();
+        Thread.sleep(4000);
 
     }//End of Address
+
+    /**
+     * Function Name: Education
+     * Description: This function will enter the applicant Permanent Address and Present Address
+     * Test Case reference number: TC_12
+     * Parameters: None
+     *
+     */
+    public void Education() throws Exception{
+
+        //Select the Education level
+        //driver.findElement(By.id("select2-education_0_education_level-container")).click();
+
+
+        driver.findElement(By.id("select2-education_0_education_level-container")).click();
+        Thread.sleep(3000);
+        driver.findElement(By.cssSelector(".select2-search__field")).sendKeys("ssc");
+        Thread.sleep(3000);
+        driver.findElement(By.cssSelector(".select2-search__field")).sendKeys(Keys.ENTER);
+        Thread.sleep(3000);
+
+        driver.findElement(By.id("select2-education_0_exam-container")).click();
+        Thread.sleep(3000);
+        driver.findElement(By.cssSelector(".select2-search__field")).sendKeys("s.s.c");
+        Thread.sleep(3000);
+        driver.findElement(By.cssSelector(".select2-search__field")).sendKeys(Keys.ENTER);
+        Thread.sleep(3000);
+
+        driver.findElement(By.id("select2-education_0_subject-container")).click();
+        Thread.sleep(3000);
+        driver.findElement(By.cssSelector(".select2-search__field")).sendKeys("science");
+        Thread.sleep(3000);
+        driver.findElement(By.cssSelector(".select2-search__field")).sendKeys(Keys.ENTER);
+        Thread.sleep(3000);
+
+        driver.findElement(By.id("select2-education_0_exam_body-container")).click();
+        Thread.sleep(3000);
+        driver.findElement(By.cssSelector(".select2-search__field")).sendKeys("dhaka");
+        Thread.sleep(3000);
+        driver.findElement(By.cssSelector(".select2-search__field")).sendKeys(Keys.ENTER);
+        Thread.sleep(3000);
+
+        driver.findElement(By.id("education_0_passing_year")).click();
+        Thread.sleep(3000);
+        driver.findElement(By.id("education_0_passing_year")).clear();
+        Thread.sleep(2000);
+        driver.findElement(By.id("education_0_passing_year")).sendKeys("1992");
+        Thread.sleep(3000);
+        driver.findElement(By.id("education_0_passing_year")).sendKeys(Keys.ENTER);
+        Thread.sleep(3000);
+
+        WebElement Element = driver.findElement(By.id("select2-education_0_result_type-container"));
+        JavascriptExecutor jscroll1 = (JavascriptExecutor)driver; // Scroll operation using Js Executor
+        jscroll1.executeScript("arguments[0].scrollIntoView();", Element);
+        Thread.sleep(3000);
+
+        driver.findElement(By.id("select2-education_0_result_type-container")).click();
+        Thread.sleep(3000);
+        driver.findElement(By.cssSelector(".select2-search__field")).sendKeys("1st");
+        Thread.sleep(3000);
+        driver.findElement(By.cssSelector(".select2-search__field")).sendKeys(Keys.ENTER);
+        //End of First Education
+
+        //Start Second Education
+        driver.findElement(By.id("addEducationForm")).click();
+        Thread.sleep(3000);
+
+        WebElement Element2 = driver.findElement(By.cssSelector(".select2-selection__placeholder"));
+        JavascriptExecutor jscroll2 = (JavascriptExecutor)driver; // Scroll operation using Js Executor
+        jscroll2.executeScript("arguments[0].scrollIntoView();", Element2);
+        Thread.sleep(3000);
+
+        driver.findElement(By.cssSelector(".select2-selection__placeholder")).click();
+        Thread.sleep(3000);
+        driver.findElement(By.cssSelector(".select2-search__field")).sendKeys("hsc");
+        Thread.sleep(3000);
+        driver.findElement(By.cssSelector(".select2-search__field")).sendKeys(Keys.ENTER);
+        Thread.sleep(3000);
+
+        driver.findElement(By.id("select2-education_1_exam-container")).click();
+        Thread.sleep(3000);
+        driver.findElement(By.cssSelector(".select2-search__field")).sendKeys("hsc");
+        Thread.sleep(3000);
+        driver.findElement(By.cssSelector(".select2-search__field")).sendKeys(Keys.ENTER);
+        Thread.sleep(3000);
+
+        driver.findElement(By.id("select2-education_1_subject-container")).click();
+        Thread.sleep(3000);
+        driver.findElement(By.cssSelector(".select2-search__field")).sendKeys("science");
+        Thread.sleep(3000);
+        driver.findElement(By.cssSelector(".select2-search__field")).sendKeys(Keys.ENTER);
+        Thread.sleep(3000);
+
+        driver.findElement(By.id("select2-education_1_exam_body-container")).click();
+        Thread.sleep(3000);
+        driver.findElement(By.cssSelector(".select2-search__field")).sendKeys("comilla");
+        Thread.sleep(3000);
+        driver.findElement(By.cssSelector(".select2-search__field")).sendKeys(Keys.ENTER);
+        Thread.sleep(3000);
+
+        driver.findElement(By.id("education_1_passing_year")).click();
+        Thread.sleep(3000);
+        driver.findElement(By.id("education_1_passing_year")).clear();
+        driver.findElement(By.id("education_1_passing_year")).sendKeys("1994");
+        Thread.sleep(3000);
+        driver.findElement(By.id("education_1_passing_year")).sendKeys(Keys.ENTER);
+        Thread.sleep(3000);
+
+        WebElement Element3 = driver.findElement(By.id("select2-education_1_result_type-container"));
+        JavascriptExecutor jscroll3 = (JavascriptExecutor)driver; // Scroll operation using Js Executor
+        jscroll3.executeScript("arguments[0].scrollIntoView();", Element3);
+        Thread.sleep(3000);
+
+        driver.findElement(By.id("select2-education_1_result_type-container")).click();
+        Thread.sleep(3000);
+        driver.findElement(By.cssSelector(".select2-search__field")).sendKeys("1st");
+        Thread.sleep(3000);
+        driver.findElement(By.cssSelector(".select2-search__field")).sendKeys(Keys.ENTER);
+        Thread.sleep(3000);
+        //End of 2nd Education
+
+        JavascriptExecutor jscroll4 = (JavascriptExecutor)driver; // Scroll operation using Js Executor
+        jscroll4.executeScript("window.scrollBy(0,400)"); // Scroll Down(+ve) upto browse option
+        Thread.sleep(3000);
+
+        // CLICK ON NEXT BUTTON
+        driver.findElement(By.cssSelector("#nextButtonContainer > .btn")).click();
+        Thread.sleep(3000);
+
+    }//End of Education
+
+    /**
+     * Function Name: JobExperience
+     * Description: This function will enter the applicant Job Experience info
+     * Test Case reference number: TC_13
+     * Parameters: None
+     *
+     */
+    public void JobExperience() throws Exception{
+
+        //ENTER the Organization name
+        driver.findElement(By.id("jobexperience_0_organization")).click();
+        Thread.sleep(2000);
+        driver.findElement(By.id("jobexperience_0_organization")).sendKeys("ANX CORP");
+        Thread.sleep(2000);
+        driver.findElement(By.id("jobexperience_0_organization")).sendKeys(Keys.ENTER);
+        Thread.sleep(3000);
+
+        //ENTER the Designation
+//        driver.findElement(By.cssSelector(".select2-search__field")).sendKeys("engineer");
+//        driver.findElement(By.cssSelector(".select2-search__field")).sendKeys(Keys.ENTER);
+
+        //ENTER the Job Start and End date
+        JavascriptExecutor js1 = (JavascriptExecutor) driver;
+        js1.executeScript("arguments[0].value = arguments[1]",
+                driver.findElement(By.id("jobexperience_0_start_date")), "2018-05-03");
+        Thread.sleep(3000);
+
+        JavascriptExecutor js2 = (JavascriptExecutor) driver;
+        js2.executeScript("arguments[0].value = arguments[1]",
+                driver.findElement(By.id("jobexperience_0_end_date")), "2023-12-03");
+        Thread.sleep(3000);
+
+
+        //ENTER JOB ADDRESS
+        driver.findElement(By.id("jobexperience_0_address")).click();
+        driver.findElement(By.id("jobexperience_0_address")).sendKeys("24 PALTAN DHAKA");
+        driver.findElement(By.id("jobexperience_0_address")).sendKeys(Keys.ENTER);
+        Thread.sleep(3000);
+
+        // CLICK ON NEXT BUTTON
+        driver.findElement(By.cssSelector(".jobExpNext")).click();
+        Thread.sleep(30000);
+
+    }//End of Job Experience
 
 
 
